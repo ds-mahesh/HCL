@@ -48,6 +48,7 @@ export const config: TemplateConfig = {
       "slug",
       "geocodedCoordinate",
       "services",
+      "c_details",
     ],
     // Defines the scope of entities that qualify for this stream.
     filter: {
@@ -144,7 +145,18 @@ const Location: Template<TemplateRenderProps> = ({
     geocodedCoordinate,
     services,
     description,
+    c_details,
   } = document;
+
+  const[data,setData]=React.useState([]);
+  React.useEffect(()=>{
+  fetch(
+    "https://liveapi-sandbox.yext.com/v2/accounts/me/entities?api_key=516ca7869d70e6b97458f4c534ed4983&v=20230110&entityTypes=location")
+                .then((res) => res.json())
+                .then((json) => {
+                  setData(json.response.entities)
+                })
+              });
 
   return (
     <>
@@ -169,6 +181,15 @@ const Location: Template<TemplateRenderProps> = ({
               <div className="bg-gray-100 p-2">
                 <div className="text-xl font-semibold">{`About ${name}`}</div>
                 <p className="pt-4">{description}</p>
+                {c_details?.image.map((i:any)=>{
+                      return (
+                    <img src={i.url} className="card-img-top" alt="..."/>
+                    )
+                  } )}
+
+               <div><a href="{c_details?.name?.url}">Dotsquares</a></div> 
+                    <div>{c_details?.description}</div> 
+               <a href="{c_details?.name?.url}" className="btn btn-primary">Contect Us</a>
               </div>
             </div>
           </div>
